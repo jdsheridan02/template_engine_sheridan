@@ -12,9 +12,10 @@ const render = require("./Library/htmlRenderer");
 const employees = [];
 
 // Write code to use inquirer to gather information about the development team members,
-employeeChoice();
+employeeRole();
 
-function employeeChoice() {
+//separates questionnaire dependent on role within company
+function employeeRole() {
     inquirer.prompt([{
         type: "list",
         name: "choice",
@@ -36,8 +37,9 @@ function employeeChoice() {
             }
         })
 }
+// built similar prompts that are dependent on job role, pushes all answers to empty employee array
 function internSurvey() {
-    // ask for the name, id, email, and school
+    // prompts user for intern specific info: name, id, email, and school
      inquirer.prompt([
         {
             type: "input",
@@ -56,28 +58,27 @@ function internSurvey() {
         },
         {
             type: "input",
-            message: "What is your role specific property (School, GitHub Link, Office Number)?",
+            message: "What is your role specific property (School/College)?",
             name: "Property"
         },
     ]).then (function (internAnswers){ 
         // function is pushing all the answers into an array which will be used by the htmlrender.js file
         console.log(internAnswers);
 
+        // created new parameter to store information gathered from prompts, pushing information to empty employees array
         const intern = new Intern (internAnswers.Name, internAnswers.ID, internAnswers.Email, internAnswers.Property)
         console.log(intern);
         employees.push(intern);
         console.log(employees);
         
         // executing initial function for multiple employees, or to finish running the function and build the HTML file
-        employeeChoice();
+        employeeRole();
     })
 };
 
-
-
+// built similar prompts that are dependent on job role, pushes all answers to empty employee array
 function engSurvey() {
-    // ask for the name, id, email, and github
-
+    // prompts user for engineer specific info: name, id, email, and github
     inquirer.prompt([
         {
             type: "input",
@@ -96,25 +97,27 @@ function engSurvey() {
         },
         {
             type: "input",
-            message: "What is your role specific property (School, GitHub Link, Office Number)?",
+            message: "What is your role specific property (GitHub Link)?",
             name: "Property"
         },
     ]).then (function (engAnswers){ 
         // function is pushing all the answers into an array which will be used by the htmlrender.js file
         console.log(engAnswers);
 
+        // created new parameter to store information gathered from prompts, pushing information to empty employees array
         const engineer = new Engineer (engAnswers.Name, engAnswers.ID, engAnswers.Email, engAnswers.Property)
         console.log(engineer);
         employees.push(engineer);
         console.log(employees);
 
         // executing initial function for multiple employees, or to finish running the function and build the HTML file
-        employeeChoice();
+        employeeRole();
     })
 };
 
-
+// built similar prompts that are dependent on job role, pushes all answers to empty employee array
 function manSurvey() {
+    //prompts for manager specific info: name, id, email, office number
     inquirer.prompt([
         {
             type: "input",
@@ -133,33 +136,37 @@ function manSurvey() {
         },
         {
             type: "input",
-            message: "What is your role specific property (School, GitHub Link, Office Number)?",
+            message: "What is your role specific property (Office Number)?",
             name: "Property"
         },
     ]).then (function (manAnswers){ 
         // function is pushing all the answers into an array which will be used by the htmlrender.js file
         console.log(manAnswers);
 
+        // created new parameter to store information gathered from prompts, pushing information to empty employees array
         const manager = new Manager (manAnswers.Name, manAnswers.ID, manAnswers.Email, manAnswers.Property)
         console.log(manager);
         employees.push(manager);
         console.log(employees);
 
         // executing initial function for multiple employees, or to finish running the function and build the HTML file
-        employeeChoice();
+        employeeRole();
     })
 };
 
-// and to create objects for each team member (using the correct classes as blueprints!)
+// After the user has input all employees desired, call the `render` function (required above) and pass in an array containing all employee objects; the `render` function will generate and return a block of HTML including templated divs for each employee!
 
 function createHTMLFile(){
-    const html = render(employees);
-    console.log(html);
 
-    fs.writefile
+    if (!fs.existsSync(OUTPUT_DIR)){
+        fs.mkdirSync(OUTPUT_DIR)
+    }
+    
+    fs.writeFileSync(outputPath, render(employees), "utf-8")
+
 };
 
-// After the user has input all employees desired, call the `render` function (required above) and pass in an array containing all employee objects; the `render` function will generate and return a block of HTML including templated divs for each employee!
+
 
 
 
@@ -168,12 +175,8 @@ function createHTMLFile(){
 // Hint: you may need to check if the `output` folder exists and create it if it does not.
 
 
-// HINT: each employee type (manager, engineer, or intern) has slightly different information; write your code to ask different questions via inquirer depending on employee type.
 
 
 
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
+
+
